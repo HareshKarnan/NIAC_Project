@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 import time
 import math
+from operator import itemgetter
 import control
+import threading
 
 x_point = []
 y_point = []
@@ -60,8 +62,11 @@ cv2.resizeWindow('image', 800, 600)
 cv2.namedWindow('mask', cv2.WINDOW_NORMAL)
 cv2.resizeWindow('mask', 800, 600)
 #cv2.createTrackbar('Threshold', 'mask',0,255,nothing)
-
+nodept=[]
+def getkey(item):
+    return item[0]+item[1]
 while (len(x_point) > 3):
+    start_time = time.time()
     # Capture frame-by-frame
     ret, img = cap.read()
 
@@ -102,17 +107,26 @@ while (len(x_point) > 3):
     # find contours
     _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     count =0
-
     for cnt in contours:
         if cv2.contourArea(cnt) > 200:
             count=count+1
             M = cv2.moments(cnt)
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
+            nodept.append((cX,cY))
             cv2.circle(imgc,(cX,cY),4,(100,100,10),thickness=5)
-    print count
+    temp=0
+    nodept.sort(key=itemgetter(1))
+    for pt in nodept:
+        temp=temp+1
+        cv2.putText(imgc,str(temp) , pt, cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0))
+
+    #number the nodes
+
     cv2.imshow('image', imgc)
     cv2.imshow('mask', thresh)
     if cv2.waitKey(1) & 0xFF == ord('q'):
+        print nodept
         break
-
+    nodept=[]
+    print("--- %s seconds ---" % pow((time.time() - start_time),-1) )
