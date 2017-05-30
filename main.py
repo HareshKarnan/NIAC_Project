@@ -6,7 +6,7 @@ import control
 
 x_point = []
 y_point = []
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 mtx = np.matrix([[ 417.70843832,0,316.58646489],[0,417.85377461,248.56902084],[0,0,1]])
 dist = np.matrix([[-0.38762883, 0.10970692, -0.00165442, -0.0013712,  -0.0070191 ]])
 def nothing(x):
@@ -73,16 +73,16 @@ while (len(x_point) > 3):
     imgc = cv2.warpPerspective(img, M, (800, 600))
 
     # rotate image
-    (h, w) = imgc.shape[:2]
-    center = (w / 2, h / 2)
-    obj = cv2.getRotationMatrix2D(center, 180, 1.0)
-    imgc = cv2.warpAffine(imgc, obj, (w, h))
+    #(h, w) = imgc.shape[:2]
+    #center = (w / 2, h / 2)
+    #obj = cv2.getRotationMatrix2D(center, 180, 1.0)
+    #imgc = cv2.warpAffine(imgc, obj, (w, h))
 
     # convert to hsv format
     hsv = cv2.cvtColor(imgc, cv2.COLOR_BGR2HSV)
 
     # set the values for red
-    lower_green = np.array([1, 100, 100], dtype=np.uint8)
+    lower_green = np.array([0, 100, 100], dtype=np.uint8)
     upper_green = np.array([7, 255, 255], dtype=np.uint8)
 
     # create a mask image
