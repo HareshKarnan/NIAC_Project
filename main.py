@@ -72,15 +72,16 @@ while (len(x_point) > 3):
     # Capture frame-by-frame
     ret, img = cap.read()
     nodept,imgc = camerasystem.getnodes(img,pts1,pts2)
+    while(len(nodept)!=10):
+        nodept, imgc = camerasystem.getnodes(img, pts1, pts2)
 
     #sorting done here
     nodept.sort(key=itemgetter(1),reverse=True)
-
     try :
             print nodept
             nodept = node.dist_scan(nodept,nodept_old)
 
-    except (RuntimeError, TypeError, NameError):
+    except :
         print "first time skip"
         pass
     # write node numbers and draw circles
